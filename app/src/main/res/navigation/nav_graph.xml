@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/mainPageFragment">
+
+    <fragment
+        android:id="@+id/mainPageFragment"
+        android:name="kz.adamant.tictactoe.fragments.MainPageFragment"
+        android:label="Main Page"
+        tools:layout="@layout/fragment_main_page" >
+        <action
+            android:id="@+id/action_mainPageFragment_to_userNameFragment"
+            app:destination="@id/userNameFragment" />
+        <action
+            android:id="@+id/action_mainPageFragment_to_userRecordsFragment"
+            app:destination="@id/userRecordsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/userNameFragment"
+        android:name="kz.adamant.tictactoe.fragments.UserNameFragment"
+        android:label="Select Usernames"
+        tools:layout="@layout/fragment_user_name" >
+        <action
+            android:id="@+id/action_userNameFragment_to_gameFragment"
+            app:destination="@id/gameFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/gameFragment"
+        android:name="kz.adamant.tictactoe.fragments.GameFragment"
+        android:label="TicTacToe"
+        tools:layout="@layout/fragment_game" >
+        <argument
+            android:name="user1"
+            android:defaultValue="UnnamedUser1"
+            app:argType="string" />
+        <argument
+            android:name="user2"
+            app:argType="string"
+            android:defaultValue="UnnamedUser2" />
+        <action
+            android:id="@+id/action_gameFragment_to_userRecordsFragment"
+            app:popUpTo="@+id/userNameFragment"
+            app:popUpToInclusive="false"
+            app:destination="@+id/userRecordsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/userRecordsFragment"
+        android:name="kz.adamant.tictactoe.fragments.UserRecordsFragment"
+        android:label="User Records"
+        tools:layout="@layout/fragment_user_records" >
+        <action
+            android:id="@+id/action_userRecordsFragment_to_mainPageFragment"
+            app:popUpTo="@+id/mainPageFragment"
+            app:popUpToInclusive="true"
+            app:destination="@+id/mainPageFragment" />
+    </fragment>
+</navigation>

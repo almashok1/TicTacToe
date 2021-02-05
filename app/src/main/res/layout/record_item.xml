@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="60dp">
+
+    <TextView
+        android:id="@+id/tv_userName"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:gravity="center|start"
+        android:padding="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/guideline"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="TextView" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.4" />
+
+    <TextView
+        android:id="@+id/tv_wins"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:text="@string/wins"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toTopOf="@+id/wins"
+        app:layout_constraintEnd_toStartOf="@+id/tv_loses"
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintStart_toStartOf="@+id/guideline"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <TextView
+        android:id="@+id/wins"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/tv_wins"
+        app:layout_constraintStart_toStartOf="@+id/tv_wins"
+        app:layout_constraintTop_toBottomOf="@+id/tv_wins"
+        app:layout_constraintVertical_chainStyle="packed"
+        tools:text="0" />
+
+
+    <TextView
+        android:id="@+id/tv_loses"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/loses"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toTopOf="@+id/loses"
+        app:layout_constraintEnd_toStartOf="@+id/tv_ties"
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintStart_toEndOf="@+id/tv_wins"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <TextView
+        android:id="@+id/loses"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/tv_loses"
+        app:layout_constraintStart_toStartOf="@+id/tv_loses"
+        app:layout_constraintTop_toBottomOf="@+id/tv_loses"
+        app:layout_constraintVertical_chainStyle="packed"
+        tools:text="0" />
+
+
+    <TextView
+        android:id="@+id/tv_ties"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:text="@string/ties"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toTopOf="@+id/ties"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintStart_toEndOf="@+id/tv_loses"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <TextView
+        android:id="@+id/ties"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/tv_ties"
+        app:layout_constraintStart_toStartOf="@+id/tv_ties"
+        app:layout_constraintTop_toBottomOf="@+id/tv_ties"
+        app:layout_constraintVertical_chainStyle="packed"
+        tools:text="0" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
