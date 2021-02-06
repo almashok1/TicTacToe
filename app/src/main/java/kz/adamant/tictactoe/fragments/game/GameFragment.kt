@@ -9,7 +9,6 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import kz.adamant.tictactoe.*
 import kz.adamant.tictactoe.databinding.FragmentGameBinding
-import kz.adamant.tictactoe.fragments.GameFragmentArgs
 import kz.adamant.tictactoe.game.GameViewModel
 import kz.adamant.tictactoe.game.GameViewModelFactory
 import kz.adamant.tictactoe.util.BindingFragment
@@ -50,7 +49,6 @@ class GameFragment : BindingFragment<FragmentGameBinding>(FragmentGameBinding::i
         }
 
         binding.btnContinue.setOnClickListener {
-            updateUserRecords(navArgs.user1, navArgs.user2, gameVM.gameState)
             navController.navigate(
                 R.id.action_gameFragment_to_userRecordsFragment,
             )
@@ -91,18 +89,18 @@ class GameFragment : BindingFragment<FragmentGameBinding>(FragmentGameBinding::i
                         }
                         is Game.Move.Winning -> {
                             setImage(image, game.getUserTurn())
-                            game.updateCurrentTurn()
                             makeButtonVisible()
                             setDrawLine(move.line, layout, i, j, width, height)
                             gameVM.setUserWinsText()
                             updateTopText()
+                            updateUserRecords(navArgs.user1, navArgs.user2, gameVM.gameState)
                         }
                         is Game.Move.Tie -> {
                             setImage(image, game.getUserTurn())
-                            game.updateCurrentTurn()
                             makeButtonVisible()
                             gameVM.setTieText()
                             updateTopText()
+                            updateUserRecords(navArgs.user1, navArgs.user2, gameVM.gameState)
                         }
                         is Game.Move.CannotMove -> return@setOnClickListener
                     }
