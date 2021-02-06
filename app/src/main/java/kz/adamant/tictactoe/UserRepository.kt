@@ -1,5 +1,7 @@
 package kz.adamant.tictactoe
 
+import kz.adamant.tictactoe.fragments.game.Game
+
 object UserRepository {
     private val _userRecords by lazy {
         // Took arrayList for that purpose

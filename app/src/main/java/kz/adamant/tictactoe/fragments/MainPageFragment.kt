@@ -2,9 +2,9 @@ package kz.adamant.tictactoe.fragments
 
 import android.os.Bundle
 import android.view.View
-import kz.adamant.tictactoe.util.BindingFragment
 import kz.adamant.tictactoe.R
 import kz.adamant.tictactoe.databinding.FragmentMainPageBinding
+import kz.adamant.tictactoe.util.BindingFragment
 
 class MainPageFragment :
     BindingFragment<FragmentMainPageBinding>(FragmentMainPageBinding::inflate) {

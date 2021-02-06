@@ -1,4 +1,6 @@
-package kz.adamant.tictactoe
+package kz.adamant.tictactoe.fragments.game
+
+import kotlin.random.Random
 
 class Game(
     /**
@@ -17,22 +19,23 @@ class Game(
         const val TIE = 3
     }
 
-    private var _moveCount = 0
+    private var _currentTurn: Int
 
-    fun incrementMoveCount() {
-        // This 7 means that last user turn left. it can be winning or tie
-        if (_moveCount >= 7) endGame = true
-        _moveCount++
+    init {
+        _currentTurn = Random.nextInt(2)
     }
 
-    var gameOver = false
-
-    var endGame = false
+    private var _moveCount = 0
+    private var gameOver = false
 
     fun getMarkFromIndex(index: Int): Char {
         if (index == 0) return 'X'
         else if (index == 1) return 'O'
         return ' '
+    }
+
+    private fun incrementMoveCount() {
+        _moveCount++
     }
 
     /**
@@ -51,9 +54,40 @@ class Game(
     )
     val table get() = _table
 
-    fun getUserTurn() = _moveCount % 2
+    fun updateCurrentTurn() {
+        _currentTurn = 1 - _currentTurn
+    }
+
+    fun getUserTurn() = _currentTurn
 
     fun getCurrentTurnUserName() = turn[getUserTurn()]
+
+
+    sealed class Move {
+        object Regular : Move()
+        class Winning(val line: Line) : Move()
+        object Tie : Move()
+        object CannotMove : Move()
+    }
+
+    fun makeMove(i: Int, j: Int): Move {
+        if (table[i][j] == -1 && !gameOver) {
+            incrementMoveCount()
+            // Update table state
+            table[i][j] = getUserTurn()
+            // Checking
+            val winningLine = checkForWinning(i, j)
+
+            return if (winningLine == null && _moveCount == 9)
+                Move.Tie.also { gameOver = true }
+            else if (winningLine != null)
+                Move.Winning(winningLine).also { gameOver = true }
+            else
+                Move.Regular
+        }
+
+        return Move.CannotMove
+    }
 
     /**
      * Returns integer displaying winning state
@@ -76,7 +110,6 @@ class Game(
             if (table[i][n - i] == player) rdiag++
         }
         if (row == n + 1 || col == n + 1 || ldiag == n + 1 || rdiag == n + 1) {
-            gameOver = true
             if (row == n + 1) return Line.ROW
             if (col == n + 1) return Line.COL
             if (ldiag == n + 1) return Line.L_DIAG

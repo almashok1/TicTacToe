@@ -1,8 +1,9 @@
-package kz.adamant.tictactoe
+package kz.adamant.tictactoe.fragments.userRecords
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import kz.adamant.tictactoe.User
 import kz.adamant.tictactoe.databinding.RecordItemBinding
 
 class UserRecordsAdapter(

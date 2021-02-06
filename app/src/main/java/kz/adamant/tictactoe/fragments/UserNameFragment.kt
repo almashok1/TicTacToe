@@ -3,8 +3,8 @@ package kz.adamant.tictactoe.fragments
 import android.os.Bundle
 import android.view.View
 import com.google.android.material.snackbar.Snackbar
-import kz.adamant.tictactoe.util.BindingFragment
 import kz.adamant.tictactoe.databinding.FragmentUserNameBinding
+import kz.adamant.tictactoe.util.BindingFragment
 
 class UserNameFragment :
     BindingFragment<FragmentUserNameBinding>(FragmentUserNameBinding::inflate) {

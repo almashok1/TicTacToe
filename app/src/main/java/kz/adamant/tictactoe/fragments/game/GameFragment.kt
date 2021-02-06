@@ -1,15 +1,17 @@
-package kz.adamant.tictactoe.fragments
+package kz.adamant.tictactoe.fragments.game
 
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import androidx.core.content.ContextCompat
-import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import kz.adamant.tictactoe.*
 import kz.adamant.tictactoe.databinding.FragmentGameBinding
+import kz.adamant.tictactoe.fragments.GameFragmentArgs
+import kz.adamant.tictactoe.game.GameViewModel
+import kz.adamant.tictactoe.game.GameViewModelFactory
 import kz.adamant.tictactoe.util.BindingFragment
 import kz.adamant.tictactoe.util.DrawLine
 
@@ -30,6 +32,9 @@ class GameFragment : BindingFragment<FragmentGameBinding>(FragmentGameBinding::i
 
     private lateinit var game: Game
 
+    // Global Scope singleton repository, it will be destroyed as application destroys
+    private val userRepository = UserRepository
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         game = gameVM.game
@@ -45,13 +50,9 @@ class GameFragment : BindingFragment<FragmentGameBinding>(FragmentGameBinding::i
         }
 
         binding.btnContinue.setOnClickListener {
+            updateUserRecords(navArgs.user1, navArgs.user2, gameVM.gameState)
             navController.navigate(
                 R.id.action_gameFragment_to_userRecordsFragment,
-                bundleOf(
-                    Pair("user1Name", navArgs.user1),
-                    Pair("user2Name", navArgs.user2),
-                    Pair("gameState", gameVM.gameState),
-                )
             )
         }
     }
@@ -80,19 +81,30 @@ class GameFragment : BindingFragment<FragmentGameBinding>(FragmentGameBinding::i
                 if (table[i][j] != -1) setImage(image, table[i][j])
 
                 item.setOnClickListener {
-                    if (table[i][j] == -1 && !game.gameOver) {
-                        setImage(image, game.getUserTurn())
-                        // Update table state
-                        table[i][j] = game.getUserTurn()
-                        // Checking
-                        val flag = checkWinningOrTie(layout, i, j, width, height)
-
-                        // If game is not over
-                        if (!flag) {
-                            game.incrementMoveCount()
+                    val move = game.makeMove(i, j)
+                    when (move) {
+                        is Game.Move.Regular -> {
+                            setImage(image, game.getUserTurn())
+                            game.updateCurrentTurn()
                             gameVM.setUserTurnText()
                             updateTopText()
                         }
+                        is Game.Move.Winning -> {
+                            setImage(image, game.getUserTurn())
+                            game.updateCurrentTurn()
+                            makeButtonVisible()
+                            setDrawLine(move.line, layout, i, j, width, height)
+                            gameVM.setUserWinsText()
+                            updateTopText()
+                        }
+                        is Game.Move.Tie -> {
+                            setImage(image, game.getUserTurn())
+                            game.updateCurrentTurn()
+                            makeButtonVisible()
+                            gameVM.setTieText()
+                            updateTopText()
+                        }
+                        is Game.Move.CannotMove -> return@setOnClickListener
                     }
                 }
                 // This layout params needed to construct tictactoe table by giving margins
@@ -135,35 +147,28 @@ class GameFragment : BindingFragment<FragmentGameBinding>(FragmentGameBinding::i
         }
     }
 
-    private fun checkWinningOrTie(
-        layout: RelativeLayout,
-        i: Int,
-        j: Int,
-        width: Double,
-        height: Double
-    ): Boolean {
-        // Returns Line Type if wins
-        val winning = game.checkForWinning(i, j)
-        if (winning != null || game.endGame) {
-            // Game Over
-            if (binding.btnContinue.visibility != View.VISIBLE) {
-                binding.btnContinue.visibility = View.VISIBLE
-                gameVM.isBottomButtonVisible = true
-            }
-
-            if (winning == null && game.endGame) {
-                gameVM.setTieText()
-            } else if (winning != null) {
-                gameVM.setUserWinsText()
-                gameVM.lineType = winning
-                gameVM.lineX = i
-                gameVM.lineY = j
-                setDrawLine(winning, layout, i, j, width, height)
-            }
-            updateTopText()
-            return true
+    private fun makeButtonVisible() {
+        if (binding.btnContinue.visibility != View.VISIBLE) {
+            binding.btnContinue.visibility = View.VISIBLE
+            gameVM.isBottomButtonVisible = true
         }
-        return false
+    }
+
+    private fun updateUserRecords(user1Name: String, user2Name: String, gameState: Int) {
+        val searchSuccess =
+            userRepository.searchUsers(user1Name, user2Name, gameState)
+
+        when (searchSuccess) {
+            UserRepository.SearchSuccess.FOUND_ALL -> return
+            UserRepository.SearchSuccess.FOUND_FIRST ->
+                userRepository.addUser(user2Name, gameState, 2)
+            UserRepository.SearchSuccess.FOUND_SECOND ->
+                userRepository.addUser(user1Name, gameState, 1)
+            UserRepository.SearchSuccess.FOUND_NONE -> {
+                userRepository.addUser(user1Name, gameState, 1)
+                userRepository.addUser(user2Name, gameState, 2)
+            }
+        }
     }
 
     private fun setDrawLine(
@@ -174,6 +179,9 @@ class GameFragment : BindingFragment<FragmentGameBinding>(FragmentGameBinding::i
         width: Double,
         height: Double
     ) {
+        gameVM.lineType = line
+        gameVM.lineX = i
+        gameVM.lineY = j
         when (line) {
             Game.Line.COL -> drawColLine(
                 layout,

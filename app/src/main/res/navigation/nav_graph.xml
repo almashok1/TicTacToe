@@ -28,7 +28,7 @@
     </fragment>
     <fragment
         android:id="@+id/gameFragment"
-        android:name="kz.adamant.tictactoe.fragments.GameFragment"
+        android:name="kz.adamant.tictactoe.fragments.game.GameFragment"
         android:label="TicTacToe"
         tools:layout="@layout/fragment_game" >
         <argument
@@ -47,7 +47,7 @@
     </fragment>
     <fragment
         android:id="@+id/userRecordsFragment"
-        android:name="kz.adamant.tictactoe.fragments.UserRecordsFragment"
+        android:name="kz.adamant.tictactoe.fragments.userRecords.UserRecordsFragment"
         android:label="User Records"
         tools:layout="@layout/fragment_user_records" >
         <action

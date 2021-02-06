@@ -1,10 +1,11 @@
-package kz.adamant.tictactoe
+package kz.adamant.tictactoe.game
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import kz.adamant.tictactoe.fragments.game.Game
 
 // This is basically needed for surviving configuration changes
-class GameViewModel(private val turn: Array<String>) : ViewModel() {
+class GameViewModel(turn: Array<String>) : ViewModel() {
     val game = Game(turn)
     var gameStateText: String
     var gameState: Int
