@@ -31,9 +31,6 @@ class GameFragment : BindingFragment<FragmentGameBinding>(FragmentGameBinding::i
 
     private lateinit var game: Game
 
-    // Global Scope singleton repository, it will be destroyed as application destroys
-    private val userRepository = UserRepository
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         game = gameVM.game
@@ -93,14 +90,14 @@ class GameFragment : BindingFragment<FragmentGameBinding>(FragmentGameBinding::i
                             setDrawLine(move.line, layout, i, j, width, height)
                             gameVM.setUserWinsText()
                             updateTopText()
-                            updateUserRecords(navArgs.user1, navArgs.user2, gameVM.gameState)
+                            gameVM.updateUserRecords(navArgs.user1, navArgs.user2, gameVM.gameState)
                         }
                         is Game.Move.Tie -> {
                             setImage(image, game.getUserTurn())
                             makeButtonVisible()
                             gameVM.setTieText()
                             updateTopText()
-                            updateUserRecords(navArgs.user1, navArgs.user2, gameVM.gameState)
+                            gameVM.updateUserRecords(navArgs.user1, navArgs.user2, gameVM.gameState)
                         }
                         is Game.Move.CannotMove -> return@setOnClickListener
                     }
@@ -149,23 +146,6 @@ class GameFragment : BindingFragment<FragmentGameBinding>(FragmentGameBinding::i
         if (binding.btnContinue.visibility != View.VISIBLE) {
             binding.btnContinue.visibility = View.VISIBLE
             gameVM.isBottomButtonVisible = true
-        }
-    }
-
-    private fun updateUserRecords(user1Name: String, user2Name: String, gameState: Int) {
-        val searchSuccess =
-            userRepository.searchUsers(user1Name, user2Name, gameState)
-
-        when (searchSuccess) {
-            UserRepository.SearchSuccess.FOUND_ALL -> return
-            UserRepository.SearchSuccess.FOUND_FIRST ->
-                userRepository.addUser(user2Name, gameState, 2)
-            UserRepository.SearchSuccess.FOUND_SECOND ->
-                userRepository.addUser(user1Name, gameState, 1)
-            UserRepository.SearchSuccess.FOUND_NONE -> {
-                userRepository.addUser(user1Name, gameState, 1)
-                userRepository.addUser(user2Name, gameState, 2)
-            }
         }
     }
 
